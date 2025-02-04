@@ -8,6 +8,7 @@ get('/startsida') do
 
     slim(:start)
 
+end
 
 get('/inköpslista') do
 
