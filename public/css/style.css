@@ -23,7 +23,7 @@ font-size: larger;
 #body {
 
     display: grid;
-    grid-template-rows: 100px 600px;
+    grid-template-rows: 100px calc(100vh - 100px);
     grid-template-columns: 1fr 1fr;
     grid-template-areas: 
     "head head"
@@ -36,22 +36,37 @@ font-size: larger;
 
     grid-area: sec;
     display: grid;
-    grid-template-rows: 600px ;
+    grid-template-rows: 2fr;
     grid-template-columns: 1fr 1fr;
     grid-template-areas: 
     "sec1 sec2"
     ;
-    background: red;
 }
 
 #sec1 {
 
     grid-area: sec1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
 }
 
 #sec2 {
 
     grid-area: sec2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+form {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 }
 
 #head {
@@ -104,3 +119,4 @@ font-size: larger;
     justify-content: center;
 
 }
+

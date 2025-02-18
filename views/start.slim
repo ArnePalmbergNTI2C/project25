@@ -1,9 +1,7 @@
-section#sec1
+sec#sec1 
+    p hej #{session[:username]}
 
-    p 1
+sec#sec2 
 
-section#sec2
-
-    p 2
-
-    p inlogg sak
+    form action="start_inlogg" method="get" 
+        input type="submit" value="Log in/sign in"
