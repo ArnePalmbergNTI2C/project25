@@ -3,6 +3,7 @@ require 'slim'
 require 'sqlite3'
 require 'sinatra/reloader'
 require 'bcrypt'
+require_relative 'funktion.rb'
 enable :sessions
 
 get('/startsida') do

@@ -10,8 +10,7 @@
 a {
 
     text-decoration: none;
-    color: navy;
-
+    color: black;
 }
 
 .a_h {
@@ -19,6 +18,13 @@ a {
 font-size: larger;
 }
 
+form {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
 
 #body {
 
@@ -29,43 +35,6 @@ font-size: larger;
     "head head"
     "sec sec"
     ;
-
-}
-
-#sec {
-
-    grid-area: sec;
-    display: grid;
-    grid-template-rows: 2fr;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas: 
-    "sec1 sec2"
-    ;
-}
-
-#sec1 {
-
-    grid-area: sec1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-}
-
-#sec2 {
-
-    grid-area: sec2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-}
-
-form {
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
 }
 
@@ -120,3 +89,156 @@ form {
 
 }
 
+/* startsida*/
+
+#body_startsida {
+
+    grid-area: sec;
+    display: grid;
+    grid-template-rows: 2fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 
+    "sec1_startsida sec2_startsida"
+    ;
+}
+
+#sec1_startsida {
+
+    grid-area: sec1_startsida;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+#sec2_startsida {
+
+    grid-area: sec2_startsida;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+/* startsida inlogg*/
+
+#body_startsida_inlogg {
+
+    grid-area: sec;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 
+    "sec1_startsida_inlogg sec2_startsida_inlogg"
+    "sec3_startsida_inlogg sec4_startsida_inlogg"
+    ;
+
+}
+
+#sec1_startsida_inlogg {
+
+    grid-area: sec1_startsida_inlogg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+}
+
+#sec2_startsida_inlogg {
+
+    grid-area: sec2_startsida_inlogg;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+
+}
+
+#sec3_startsida_inlogg {
+
+    grid-area: sec3_startsida_inlogg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+
+}
+
+#sec4_startsida_inlogg {
+
+    grid-area: sec4_startsida_inlogg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+/* inköpslista */
+
+#body_inkoplista {
+
+    grid-area: sec;
+    display: grid;
+    grid-template-rows: 2fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 
+    "sec1_inkoplista sec2_inkoplista"
+    ;
+}
+
+#sec1_inkoplista {
+
+    grid-area: sec1_inkoplista;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+#sec2_inkoplista {
+
+    grid-area: sec2_inkoplista;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+/* familj */
+
+#body_familj {
+
+    grid-area: sec;
+    display: grid;
+    grid-template-rows: 2fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 
+    "sec1_familj sec2_familj"
+    ;
+}
+
+#sec1_familj {
+
+    grid-area: sec1_familj;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+#sec2_familj {
+
+    grid-area: sec2_familj;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+}
