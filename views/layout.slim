@@ -22,8 +22,10 @@ html lang="en"
                 a.a_h href="/familj" Familj
             section#head_sec4
 
-                form action="start_inlogg" method="get" 
+                form.form_head action="start_inlogg" method="get" 
                     input type="submit" value="Log in/sign in" 
+                form.form_head action="utlogg" method="post" 
+                    input type="submit" value="Logga ut?" 
 
         == yield
 
