@@ -3,12 +3,11 @@ require 'slim'
 require 'sqlite3'
 require 'sinatra/reloader'
 require 'bcrypt'
-require_relative 'funktion.rb'
 enable :sessions
 
 get('/startsida') do
 
-    slim(:start)
+  slim(:start)
 
 end
 
@@ -45,6 +44,10 @@ post('/users_new') do
 end
 
 post('/login_user') do 
+
+  #om använderen inte finns
+
+
     username = params[:username]
     password = params[:password]
     db = SQLite3::Database.new('db/todo2021.db')
@@ -65,6 +68,9 @@ post('/login_user') do
 end
 
 post('/familj_new') do
+
+  #om familjen redan finns
+
   familj_namn = params[:family_name]
   password = params[:password]
   password_confirm = params[:password_confirm]
@@ -82,6 +88,9 @@ post('/familj_new') do
 end
 
 post('/login_familj') do 
+
+    #om familjen inte finns
+
   familj_namn = params[:family_name]
   password = params[:password]
   db = SQLite3::Database.new('db/todo2021.db')
@@ -95,8 +104,6 @@ post('/login_familj') do
     session[:familj_id] = id
     session[:familj_namn] = familj_namn
     session[:startsida_text_familj] = "i familj #{familj_namn}"
-
-    p id
 
     redirect('/startsida')
   else
@@ -116,14 +123,36 @@ post ('/utlogg') {
 
 }
 
-get('/inköpslista') do
+get('/inkopslista') do
 
-    slim(:inköpslista)
+  id = session[:id_username]
+  db = SQLite3::Database.new('db/todo2021.db')
+  db.results_as_hash = true
+  result = db.execute("SELECT * FROM todos WHERE user_id = ?",id)
 
+  slim(:inkopslista,locals:{todos:result})
+
+end
+
+post('/inkoplista/:id/delete') do
+  id = params[:id].to_i
+  db = SQLite3::Database.new("db/todo2021.db")
+  db.execute("DELETE FROM todos WHERE todo_id = ?",id)
+  redirect('/inkopslista')
+end
+
+post('/inkopslista/new') do
+  title = params[:title]
+  user_id = session[:id_username]
+  artist_id = session[:artist_id].to_i
+  p "Vi fick in datan #{title} och #{artist_id}"
+  db = SQLite3::Database.new("db/todo2021.db")
+  db.execute("INSERT INTO todos (content, user_id) Values (?,?)",[title, user_id])
+  redirect('/inkopslista')
 end
 
 get('/familj') do
 
-    slim(:familj)
+  slim(:familj)
 
 end
