@@ -7,6 +7,53 @@
 
 }
 
+.pp {
+
+    padding-right: 5px;
+
+
+
+}
+
+.ppp {
+
+    margin-right: 5px;
+
+
+
+}
+
+.formo {
+
+    padding-top: 35px;
+    padding-bottom: 5px;
+
+}
+
+.aa {
+
+    color: blue;
+
+}
+
+.aa:hover {
+
+    color: rgb(0, 0, 0);
+
+}
+
+li {
+
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+
+
+}
+
 a {
 
     text-decoration: none;
@@ -16,6 +63,12 @@ a {
 .a_h {
 
 font-size: larger;
+}
+
+.a_h:hover{
+
+    color: brown;
+
 }
 
 form {
