@@ -203,7 +203,6 @@ post('/inkopslista_tillbaka') do
   redirect("/inkopslista")
 end
 
-
 get('/inkopslista/:id/show') do
   id = params[:id].to_i
   session[:idd] = id
