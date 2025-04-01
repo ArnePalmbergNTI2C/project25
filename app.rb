@@ -111,17 +111,20 @@ post('/login_familj') do
   end
 end
 
-post ('/utlogg') {
+post('/utlogg') {
 
+  
   session[:username] = nil
   session[:id_username] = nil
   session[:familj_namn] = nil
   session[:startsida_text_familj] = nil
   session[:familj_id] = nil
 
-  redirect('startsida')
+  redirect('/startsida')
 
 }
+
+#listor
 
 get('/inkopslista') do
 
@@ -129,28 +132,95 @@ get('/inkopslista') do
   db = SQLite3::Database.new('db/todo2021.db')
   db.results_as_hash = true
   result = db.execute("SELECT * FROM todos WHERE user_id = ?",id)
-
-  slim(:inkopslista,locals:{todos:result})
+  slim(:"inkop/inkopslista",locals:{todos:result})
 
 end
 
-post('/inkoplista/:id/delete') do
+post('/inkopslista/:id/delete') do
   id = params[:id].to_i
   db = SQLite3::Database.new("db/todo2021.db")
   db.execute("DELETE FROM todos WHERE todo_id = ?",id)
+  redirect("/inkopslista")
+end
+
+get('/inkopslista/:id/edit') do
+  id = params[:id].to_i
+  db = SQLite3::Database.new("db/todo2021.db")
+  db.results_as_hash = true
+  result = db.execute("SELECT * FROM todos WHERE todo_id = ?",id).first
+  slim(:"/inkop/edit_list", locals:{result:result})
+end
+
+post('/inkopslista/:id/update') do
+  id = params[:id].to_i
+  lista = params[:title]
+  user_id = params[:user_id].to_i
+  db = SQLite3::Database.new("db/todo2021.db")
+  db.execute("UPDATE todos SET lista=?,user_id=? WHERE todo_id = ?",[lista,user_id,id])
   redirect('/inkopslista')
+  
 end
 
 post('/inkopslista/new') do
   title = params[:title]
   user_id = session[:id_username]
-  artist_id = session[:artist_id].to_i
-  p "Vi fick in datan #{title} och #{artist_id}"
   db = SQLite3::Database.new("db/todo2021.db")
-  db.execute("INSERT INTO todos (content, user_id) Values (?,?)",[title, user_id])
+  db.execute("INSERT INTO todos (lista, user_id) Values (?,?)",[title, user_id])
   redirect('/inkopslista')
 end
 
+#inne i listorna
+
+post('/inkopslista/:id/show/:idd/delete') do
+  id = params[:id].to_i
+  idd = params[:idd].to_i
+  db = SQLite3::Database.new("db/todo2021.db")
+  db.execute("DELETE FROM egna_listor WHERE todo_id = ?",idd)
+  redirect("/inkopslista/#{id}/show")
+end
+
+get('/inkopslista/:id/show/:idd/edit') do
+  id = params[:id].to_i
+  db = SQLite3::Database.new("db/todo2021.db")
+  db.results_as_hash = true
+  result = db.execute("SELECT * FROM egna_listor WHERE id = ?",id).first
+  slim(:"/inkop/edit_in_list", locals:{result:result})
+end
+
+
+post('/inkopslista/:id/show/:idd/update') do
+  id = params[:id].to_i
+  idd = params[:idd].to_i
+  content = params[:title]
+  user_id = params[:user_id].to_i
+  db = SQLite3::Database.new("db/todo2021.db")
+  db.execute("UPDATE egna_listor SET content=?,id=? WHERE todo_id = ?",[content,user_id,idd])
+  redirect("/inkopslista/#{id}/show")
+  
+end
+
+post('/inkopslista_tillbaka') do
+  redirect("/inkopslista")
+end
+
+get('/inkopslista/:id/show') do
+  id = params[:id].to_i
+  session[:idd] = id
+  db = SQLite3::Database.new("db/todo2021.db")
+  db.results_as_hash = true
+  result = db.execute("SELECT * FROM egna_listor WHERE id = ?",id)
+  slim(:"inkop/show",locals:{egna_listor:result})
+end
+
+post('/inkopslista/:id/show/:idd/new') do
+  idd = params[:idd].to_i
+  content = params[:title]
+  db = SQLite3::Database.new("db/todo2021.db")
+  db.execute("INSERT INTO egna_listor (id, content) Values (?,?)",[idd, content])
+  redirect("/inkopslista/#{id}/show")
+end
+
+#familj sidan
 get('/familj') do
 
   slim(:familj)
