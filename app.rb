@@ -22,8 +22,12 @@ post('/users_new') do
     password = params[:password]
     password_confirm = params[:password_confirm]
 
-    bob = 3
-    if bob == 3
+    db= SQLite3::Database.new('db/todo2021.db')
+    db.results_as_hash = true
+    result = nil
+    result = db.execute("SELECT * FROM users WHERE username = ?",username).first
+
+    if result == nil
 
       if password == password_confirm
         #lägg till användare
@@ -75,16 +79,29 @@ post('/familj_new') do
   password = params[:password]
   password_confirm = params[:password_confirm]
 
-  if password == password_confirm
-    #lägg till användare
-    password_digest = BCrypt::Password.create(password)
     db= SQLite3::Database.new('db/todo2021.db')
-    db.execute("INSERT INTO familj (familj_namn,pwdigest) VALUES (?,?)",[familj_namn,password_digest])
-    redirect('/start_inlogg')
+    db.results_as_hash = true
+    result = nil
+    result = db.execute("SELECT * FROM familj WHERE familj_namn = ?",familj_namn).first
 
-  else
-    p "Lösenorden matchade inte"
-  end
+    if result == nil
+
+      if password == password_confirm
+        #lägg till användare
+        password_digest = BCrypt::Password.create(password)
+        db= SQLite3::Database.new('db/todo2021.db')
+        db.execute("INSERT INTO familj (familj_namn,pwdigest) VALUES (?,?)",[familj_namn,password_digest])
+        redirect('/start_inlogg')
+
+      else
+        p "Lösenorden matchade inte"
+      end
+
+    else
+
+      p "Familjenamnet finns redan"
+
+    end
 end
 
 post('/login_familj') do 
@@ -164,9 +181,18 @@ end
 post('/inkopslista/new') do
   title = params[:title]
   user_id = session[:id_username]
-  db = SQLite3::Database.new("db/todo2021.db")
-  db.execute("INSERT INTO todos (lista, user_id) Values (?,?)",[title, user_id])
-  redirect('/inkopslista')
+  if user_id == nil
+        
+    "Inte inloggad"
+
+  else
+
+    db = SQLite3::Database.new("db/todo2021.db")
+    db.execute("INSERT INTO todos (lista, user_id) Values (?,?)",[title, user_id])
+    redirect('/inkopslista')
+
+  end
+ 
 end
 
 #inne i listorna
