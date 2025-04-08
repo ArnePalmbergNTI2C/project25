@@ -30,9 +30,9 @@ post('/users_new') do
     if result == nil
 
       if password == password_confirm
-        #lägg till användare
         password_digest = BCrypt::Password.create(password)
         db= SQLite3::Database.new('db/todo2021.db')
+        db.results_as_hash = true
         db.execute("INSERT INTO users (username,pwdigest) VALUES (?,?)",[username,password_digest])
         redirect('/start_inlogg')
     
@@ -51,24 +51,35 @@ post('/login_user') do
 
   #om använderen inte finns
 
-
+    session[:familj_namn] = nil
+    session[:startsida_text_familj] = nil
+    session[:familj_id] = nil
     username = params[:username]
     password = params[:password]
     db = SQLite3::Database.new('db/todo2021.db')
     db.results_as_hash = true
     result = db.execute("SELECT * FROM users WHERE username = ?",username).first
-    pwdigest = result["pwdigest"]
-    id = result["id"]
+    if result != nil
+        
+      pwdigest = result["pwdigest"]
+      id = result["id"]
+
+      if BCrypt::Password.new(pwdigest) == password
+
+        session[:id_username] = id
+        session[:username] = username
   
-    if BCrypt::Password.new(pwdigest) == password
-
-      session[:id_username] = id
-      session[:username] = username
-
-      redirect('/startsida')
+        redirect('/startsida')
+      else
+        "Fel lösen"
+      end
+  
     else
-      "Fel lösen"
+  
+      "Finns ingen användare med detta namn"
+  
     end
+  
 end
 
 post('/familj_new') do
@@ -91,7 +102,7 @@ post('/familj_new') do
         password_digest = BCrypt::Password.create(password)
         db= SQLite3::Database.new('db/todo2021.db')
         db.execute("INSERT INTO familj (familj_namn,pwdigest) VALUES (?,?)",[familj_namn,password_digest])
-        redirect('/start_inlogg')
+      redirect('/start_inlogg')
 
       else
         p "Lösenorden matchade inte"
@@ -106,31 +117,52 @@ end
 
 post('/login_familj') do 
 
-    #om familjen inte finns
+  #om familjen inte finns
 
   familj_namn = params[:family_name]
   password = params[:password]
   db = SQLite3::Database.new('db/todo2021.db')
   db.results_as_hash = true
-  result = db.execute("SELECT * FROM familj WHERE familj_namn = ?",familj_namn).first
-  pwdigest = result["pwdigest"]
-  id = result["id"]
 
-  if BCrypt::Password.new(pwdigest) == password
+  result = db.execute("SELECT * FROM familj WHERE familj_namn = ?",[familj_namn]).first
 
-    session[:familj_id] = id
-    session[:familj_namn] = familj_namn
-    session[:startsida_text_familj] = "i familj #{familj_namn}"
+  if result != nil
+        
+    pwdigest = result["pwdigest"]
+    id = result["id"]
 
-    redirect('/startsida')
+    if BCrypt::Password.new(pwdigest) == password
+
+      session[:familj_id] = id
+      session[:familj_namn] = familj_namn
+      session[:startsida_text_familj] = "i familj #{familj_namn}"
+  
+      db.results_as_hash = true
+      result = db.execute("SELECT * FROM familj WHERE familj_namn = ?",familj_namn).first
+      id = result["id"]
+      id2 = session[:id_username]
+      username = session[:username]
+  
+      result = db.execute("SELECT * FROM familj_users WHERE user_id = ?",id2).first
+      if result == nil
+        db.execute("INSERT INTO familj_users (namn,admin_normal,user_id,familj_id) VALUES (?,?,?,?)",[username,0,id2, id])
+      end
+  
+      redirect('/startsida')
+    else
+      "Fel lösen"
+    end
+
   else
-    "Fel lösen"
+
+    p "Finns ingen familj med detta familjenamn"
+
   end
+
 end
 
 post('/utlogg') {
 
-  
   session[:username] = nil
   session[:id_username] = nil
   session[:familj_namn] = nil
@@ -250,6 +282,16 @@ end
 #familj sidan
 get('/familj') do
 
-  slim(:familj)
+  
+  id = session[:familj_id]
+  db = SQLite3::Database.new('db/todo2021.db')
+  db.results_as_hash = true
+  result = db.execute("SELECT * FROM familj_users WHERE familj_id = ?",id)
+  slim(:"familj/familj",locals:{familj_users:result})
 
+end
+
+post('/familj/go') do
+
+  redirect('/familj')
 end

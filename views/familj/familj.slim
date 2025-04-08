@@ -2,8 +2,15 @@ section#body_familj
 
     sec#sec1_familj
 
-        p lista
+            ol
 
+            - familj_users.each do |todo|
+
+                li
+            
+                    p #{todo["namn"]}
+
+        
     sec#sec2_familj
 
         p Här kan du och din familj skapa, ändra och hålla koll på era gemensamma inköpslistor på ett enkelt och smidigt sätt! Lägg till varor snabbt, ta bort det ni inte längre behöver och håll listorna uppdaterade tillsammans. Perfekt för att samarbeta och planera matinköp eller andra ärenden. Med vår funktion kan hela familjen vara med och hålla koll på vad som behöver köpas.    
